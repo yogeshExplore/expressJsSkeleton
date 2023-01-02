@@ -16,13 +16,13 @@ class BaseModel {
         this.pageLimit = Setting.pageLimit
     }
 
-    async bakeGetQuery(pk, urlQuery, sortBy, page = 1, projection = null) {
+    bakeGetQuery(pk, urlQuery, sortBy, page = 1, projection = null) {
         const query = { dbQuery: {} };
         const sortQuery = [];
 
         if (pk) {
             query.dbQuery['_id'] = UUID(pk)
-            const cursor = await this.collection.findOne(query.dbQuery)
+            const cursor = this.collection.findOne(query.dbQuery)
             return cursor
         }
 
@@ -40,35 +40,25 @@ class BaseModel {
 
     }
 
-    getFromArray(err, documents) {
-        if (err) {
-
-        }
-
-    }
-
     async get(pk, urlQuery, sortBy, page = 1) {
         try {
-            const cursor = await this.bakeGetQuery(pk, urlQuery, sortBy, page)
+            const cursor = this.bakeGetQuery(pk, urlQuery, sortBy, page)
+            let modalData = {}
             if (pk) {
-                const modalData = {
-                    data: cursor
+                const docs = await cursor
+                modalData = {
+                    data: docs
                 }
-                return modalData;
             }
             else {
-                const docs = await cursor.toArray().then(function (documents) {
-                    return documents;
-                }).catch(function (error) {
-                    throw error
-                })
-                const modalData = {
+                const docs = await cursor.toArray();
+                modalData = {
                     data: docs,
                     page: page,
                     totalPages: ''
                 }
-                return modalData;
             }
+            return modalData;
         } catch (error) {
             logger.error(`[MONGODB] Unable to get data query=${pk}|${urlQuery}, error=${error}`)
             return parseError('SD001', `${pk}|${urlQuery}`, String(error), error)
