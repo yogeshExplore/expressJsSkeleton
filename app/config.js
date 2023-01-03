@@ -30,6 +30,12 @@ class Config {
         port: process.env.MONGODB_PORT,
         database: process.env.MONGODB_DATABASE
     }
+
+    static twitter = {
+        apiKey: process.env.TWITTER_API_KEY,
+        apiSecret: process.env.TWITTER_API_SECRET,
+        apiToken: process.env.TWITTER_API_TOKEN
+    }
 }
 
 console.log(`Trying to bootup ${Config.appName}`);

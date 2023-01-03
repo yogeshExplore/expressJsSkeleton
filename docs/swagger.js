@@ -8,4 +8,4 @@ const options = {
   explorer: true
 }
 
-swaggerRouter.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
+swaggerRouter.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
